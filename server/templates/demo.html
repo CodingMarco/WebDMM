@@ -1,0 +1,75 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Demo - background worker</title>
+
+        <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.min.js"></script>
+
+        <script type="text/javascript" charset="utf-8">
+
+            $(document).ready(function() {
+
+                var socketio = null;
+                var namespace = "/"
+                $("input[name='connect']").on("click", function() {
+
+                    console.log("connect");
+
+                    socketio = io.connect(
+                            location.protocol       +
+                            '//'                    +
+                            document.domain         +
+                            ':'                     +
+                            location.port           +
+                            namespace
+                        );
+
+                    socketio.off().on("re_connect", function(msg) {
+                        $(".report").append(msg.msg + "<br />");
+                    });
+                });
+
+                $("input[name='start']").on("click", function() {
+                    socketio.emit("start");
+                    socketio.on("update", function(msg) {
+                        $(".report").append(msg.msg + "<br />");
+                    });
+                    socketio.on("readout", function(msg) {
+                        $(".report").append(msg.msg + "<br />");
+                    });
+                });
+
+                $("input[name='stop']").on("click", function() {
+                    socketio.emit("stop");
+                    socketio.on("update", function(msg) {
+                        $(".report").append(msg + "<br />");
+                    });
+                });
+
+
+            });
+
+        </script>
+
+    </head>
+
+    <body>
+        <div class="main_container" >
+
+            <div class="control">
+
+                <form id="ctrl_form">
+                    <input type="button" name="connect" value="connect" />
+                    <input type="button" name="start" value="start" />
+                    <input type="button" name="stop" value="stop" />
+
+                </form>
+            </div>
+
+            <div class="report">
+                ...
+            </div>
+        </div>
+    </body>
+</html>
