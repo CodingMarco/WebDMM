@@ -15,6 +15,10 @@ const actions = {
     commit("setErrorMessage", errorMessage);
     commit("setShowErrorModal", true);
   },
+  socket_error({ commit }, errorMessage) {
+    commit("setErrorMessage", errorMessage.msg);
+    commit("setShowErrorModal", true);
+  },
 };
 
 const mutations = {

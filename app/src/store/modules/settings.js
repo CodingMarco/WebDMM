@@ -23,7 +23,7 @@ const siPrefixes = {
 
 const state = {
   measurement: "DCV",
-  nrOfDigits: 5,
+  nrOfDigits: 4,
   range: 3,
   autozeroEnabled: false,
 };
@@ -43,17 +43,30 @@ const actions = {
   rangeDown({ commit }) {
     commit("setRange", state.range / 10);
   },
+  // socket_settingsUpdated({ commit }, settings) {
+  //   commit("setMeasurement", settings.measurement);
+  //   commit("setNrOfDigits", settings.nrOfDigits);
+  //   commit("setRange", settings.range);
+  //   commit("setAutoZeroEnabled", settings.autoZeroEnabled);
+  // },
 };
 
 const mutations = {
   setMeasurement(state, measurment) {
     state.measurment = measurment;
+    this._vm.$socket.client.emit("update_settings", state);
   },
   setNrOfDigits(state, nrOfDigits) {
     state.nrOfDigits = nrOfDigits;
+    this._vm.$socket.client.emit("update_settings", state);
   },
   setRange(state, range) {
     state.range = range;
+    this._vm.$socket.client.emit("update_settings", state);
+  },
+  setAutoZeroEnabled(state, autoZeroEnabled) {
+    state.autoZeroEnabled = autoZeroEnabled;
+    this._vm.$socket.client.emit("update_settings", state);
   },
 };
 

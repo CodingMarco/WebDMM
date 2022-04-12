@@ -59,6 +59,20 @@ def on_disconnect():
         print('Instrument shut down.')
 
 
+@socketio.event
+def update_settings(settings):
+    global instr
+    print(settings)
+    try:
+        instr.resolution = settings['nrOfDigits']
+        instr.range = settings['range']
+        instr.auto_zero_enabled = settings['autozeroEnabled']
+        emit('settings_updated', settings)
+    except ValueError as e:
+        emit('error', {'msg': str(e)})
+
+
+
 def send_readout_thread(instr: HP3478A):
     global readout_thread_running
     while readout_thread_running:
