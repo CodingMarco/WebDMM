@@ -1,7 +1,8 @@
+eventlet
 bidict
 click
 Flask
-Flask-SocketIO
+flask-socketio
 flask-cors
 itsdangerous
 Jinja2
@@ -12,10 +13,11 @@ pyqtgraph
 pyserial
 python-dateutil
 python-engineio
-python-socketio==3.1.2
+python-socketio
 pytz
 PyVISA
 six
+tornado
 typing_extensions
 Werkzeug
 git+https://github.com/pymeasure/pymeasure.git
