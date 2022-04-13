@@ -36,10 +36,15 @@ export default {
   created: function () {
     console.log("Starting connection");
     this.$socket.$subscribe("readout", (data) => {
-      if (data == 9999900000) {
+      if (data == "OVLD") {
         this.voltage = "Overload";
       } else {
-        this.voltage = data.toFixed(this.nrOfDigits);
+        if (this.range < 3) {
+          data *= 1000;
+          this.voltage = data.toFixed(this.nrOfDigits - 2);
+        } else {
+          this.voltage = data.toFixed(this.nrOfDigits);
+        }
       }
     });
     console.log("Subscribed to readout");
@@ -67,6 +72,6 @@ export default {
 
 <style scoped>
 #measurement_display {
-  font-size: 100px;
+  font-size: 80px;
 }
 </style>

@@ -19,7 +19,7 @@ Vue.use(VueAxios, axios);
 
 console.log(io.protocol);
 
-const socket = io("http://192.168.178.78:5000");
+const socket = io("http://localhost:5005");
 
 Vue.use(VueSocketIOExt, socket, {
   store,

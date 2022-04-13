@@ -1,9 +1,12 @@
+import os
+import re
 import eventlet
 eventlet.monkey_patch()
 
 from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
 from pymeasure.instruments.hp import HP3478A
+from pymeasure.adapters import VISAAdapter
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -30,7 +33,10 @@ def on_connect(message):
     clients_connected += 1
     print(f'Client connected. {clients_connected} clients connected.')
     if instr is None:
-        instr = HP3478A('GPIB::23')
+        keysight_visa = '/usr/lib/libktvisa32.so.0'
+        visa_library = keysight_visa if os.path.isfile(keysight_visa) else '@py'
+        adapter = VISAAdapter(23, visa_library=visa_library)
+        instr = HP3478A(adapter)
         instr.auto_zero_enabled = False
         instr.range = 3
         instr.resolution = 5
@@ -77,12 +83,13 @@ def send_readout_thread(instr: HP3478A):
     global readout_thread_running
     while readout_thread_running:
         socketio.sleep(0.000001)
-        readout = float(instr.read())
+        raw_read = instr.read().strip()
+        if re.match(r'\+9\.[09]{5}E\+9', raw_read):
+            readout = "OVLD"
+        else:
+            readout = float(raw_read)
         socketio.emit('readout', readout)
 
 
 if __name__ == '__main__':
-    #import eventlet.wsgi
-    #eventlet.wsgi.server(eventlet.listen(('', 5000)), app, log=open('log.txt', 'w'))
-    socketio.run(app, host="0.0.0.0", port=5000, debug=True)
-    #socketio.run(app)
+    socketio.run(app, host="0.0.0.0", port=5005, debug=True)
