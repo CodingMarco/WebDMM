@@ -1,7 +1,6 @@
 <template>
   <div>
     <p id="measurement_display">{{ voltage }} {{ unit }}</p>
-    <b-button @click="updateSettings"> Send Settings </b-button>
     <b-button @click="rangeUp">Range up</b-button>
     <b-button @click="rangeDown">Range down</b-button>
 
@@ -15,6 +14,7 @@
 
 <script>
 import { mapGetters, mapMutations, mapActions } from "vuex";
+import formatMeasurement from "./formatMeasurement";
 
 export default {
   name: "HomeView",
@@ -39,12 +39,7 @@ export default {
       if (data == "OVLD") {
         this.voltage = "Overload";
       } else {
-        if (this.range < 3) {
-          data *= 1000;
-          this.voltage = data.toFixed(this.nrOfDigits - 2);
-        } else {
-          this.voltage = data.toFixed(this.nrOfDigits);
-        }
+        this.voltage = formatMeasurement(data, this.range, this.nrOfDigits);
       }
     });
     console.log("Subscribed to readout");
@@ -62,16 +57,17 @@ export default {
       "setAutoZeroEnabled",
     ]),
     ...mapActions(["rangeUp", "rangeDown"]),
-
-    updateSettings: function () {
-      this.setMeasurement("R2W");
-    },
   },
 };
 </script>
 
 <style scoped>
 #measurement_display {
-  font-size: 80px;
+  font-size: 100px;
+  font-family: "Digital-7 Mono";
+}
+
+button {
+  margin-right: 10px;
 }
 </style>

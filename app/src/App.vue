@@ -72,3 +72,10 @@ button {
   }
 }
 </style>
+
+<style>
+@font-face {
+  font-family: "Digital-7 Mono";
+  src: url("./fonts/digital-7-mono.ttf");
+}
+</style>

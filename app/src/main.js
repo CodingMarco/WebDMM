@@ -36,7 +36,6 @@ socket.on("connect", () => {
 });
 
 Vue.config.productionTip = false;
-//Vue.prototype.apiRootUrl = "/backend";
 
 // Using Vue 2 since Vue 3 is not yet supported
 // by BootstrapVue and many other important plugins
