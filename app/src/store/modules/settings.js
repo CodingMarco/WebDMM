@@ -43,12 +43,6 @@ const actions = {
   rangeDown({ commit }) {
     commit("setRange", state.range / 10);
   },
-  // socket_settingsUpdated({ commit }, settings) {
-  //   commit("setMeasurement", settings.measurement);
-  //   commit("setNrOfDigits", settings.nrOfDigits);
-  //   commit("setRange", settings.range);
-  //   commit("setAutoZeroEnabled", settings.autoZeroEnabled);
-  // },
 };
 
 const mutations = {
@@ -67,6 +61,12 @@ const mutations = {
   setAutoZeroEnabled(state, autoZeroEnabled) {
     state.autoZeroEnabled = autoZeroEnabled;
     this._vm.$socket.client.emit("update_settings", state);
+  },
+  SOCKET_SETTINGS_UPDATED(state, settings) {
+    state.measurement = settings.measurement;
+    state.nrOfDigits = settings.nrOfDigits;
+    state.range = settings.range;
+    state.autoZeroEnabled = settings.autoZeroEnabled;
   },
 };
 
