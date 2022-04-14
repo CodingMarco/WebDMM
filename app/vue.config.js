@@ -1,11 +1,10 @@
 module.exports = {
   devServer: {
     proxy: {
-      "^/backend": {
-        target: "http://localhost:5001",
-        pathRewrite: { "^/backend": "/" },
+      "/socket.io": {
+        target: "http://localhost:5005",
+        ws: true,
         changeOrigin: true,
-        logLevel: "debug",
       },
     },
   },

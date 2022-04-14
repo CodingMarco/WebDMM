@@ -19,18 +19,18 @@ Vue.use(VueAxios, axios);
 
 console.log(io.protocol);
 
-const socket = io("http://localhost:5005");
+const socket = io();
 
 Vue.use(VueSocketIOExt, socket, {
   store,
 });
 
 socket.on("connect", () => {
-  const transport = socket.io.engine.transport.name; // in most cases, "polling"
+  const transport = socket.io.engine.transport.name;
   console.log("Connected using " + transport);
 
   socket.io.engine.on("upgrade", () => {
-    const upgradedTransport = socket.io.engine.transport.name; // in most cases, "websocket"
+    const upgradedTransport = socket.io.engine.transport.name;
     console.log("Upgraded to " + upgradedTransport);
   });
 });
