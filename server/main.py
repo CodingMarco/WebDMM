@@ -39,7 +39,7 @@ def on_connect(message):
         instr = HP3478A(adapter)
         instr.auto_zero_enabled = False
         instr.range = 3
-        instr.resolution = 5
+        instr.resolution = 4
         instr.display_text_no_symbol = " " * 16
 
     if not readout_thread_running:
@@ -73,7 +73,8 @@ def update_settings(settings):
         instr.resolution = settings['nrOfDigits']
         instr.range = settings['range']
         instr.auto_zero_enabled = settings['autozeroEnabled']
-        emit('settings_updated', settings)
+        emit('settings_updated', settings,
+            broadcast=True, include_self=False)
     except ValueError as e:
         emit('error', {'msg': str(e)})
 
