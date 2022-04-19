@@ -1,6 +1,9 @@
 <template>
   <div>
-    <p id="measurement_display">{{ voltage }} {{ unit }}</p>
+    <p id="measurement_display">
+      <span>{{ voltage }}</span>
+      <span v-if="this.voltage != 'Overload'"> {{ unit }}</span>
+    </p>
     <b-button @click="rangeUp">Range up</b-button>
     <b-button @click="rangeDown">Range down</b-button>
 
@@ -16,30 +19,58 @@
 import { mapGetters, mapMutations, mapActions } from "vuex";
 import formatMeasurement from "./formatMeasurement";
 
+const units = {
+  ACI: "A",
+  ACV: "V",
+  DCI: "A",
+  DCV: "V",
+  R2W: "Ohm",
+  R4W: "Ohm",
+  Rext: "Ohm",
+};
+
+const siPrefixes = {
+  0.03: "m",
+  0.3: "m",
+  3: "",
+  30: "",
+  300: "",
+  3000: "k",
+  3e4: "k",
+  3e5: "k",
+  3e6: "M",
+  3e7: "M",
+};
+
 export default {
   name: "HomeView",
   data: function () {
     return {
       voltage: (0.0).toFixed(this.nrOfDigits),
       connection: null,
+      actualRange: 3,
     };
   },
 
-  computed: mapGetters([
-    "measurement",
-    "nrOfDigits",
-    "range",
-    "autozeroEnabled",
-    "unit",
-  ]),
+  computed: {
+    ...mapGetters(["measurement", "nrOfDigits", "range", "autozeroEnabled"]),
+    unit() {
+      return `${siPrefixes[this.actualRange]}${units[this.measurement]}`;
+    },
+  },
 
   created: function () {
     console.log("Starting connection");
     this.$socket.$subscribe("readout", (data) => {
-      if (data == "OVLD") {
+      this.actualRange = data.range;
+      if (data.value == "OVLD") {
         this.voltage = "Overload";
       } else {
-        this.voltage = formatMeasurement(data, this.range, this.nrOfDigits);
+        this.voltage = formatMeasurement(
+          data.value,
+          this.actualRange,
+          this.nrOfDigits
+        );
       }
     });
     console.log("Subscribed to readout");

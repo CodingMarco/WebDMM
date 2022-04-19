@@ -1,26 +1,3 @@
-const units = {
-  ACI: "A",
-  ACV: "V",
-  DCI: "A",
-  DCV: "V",
-  R2W: "Ohm",
-  R4W: "Ohm",
-  Rext: "Ohm",
-};
-
-const siPrefixes = {
-  0.03: "m",
-  0.3: "m",
-  3: "",
-  30: "",
-  300: "",
-  3000: "k",
-  3e4: "k",
-  3e5: "k",
-  3e6: "M",
-  3e7: "M",
-};
-
 const state = {
   measurement: "DCV",
   nrOfDigits: 4,
@@ -29,11 +6,10 @@ const state = {
 };
 
 const getters = {
-  measurment: (state) => state.measurment,
+  measurement: (state) => state.measurement,
   nrOfDigits: (state) => state.nrOfDigits,
   range: (state) => state.range,
   autoZeroEnabled: (state) => state.autoZeroEnabled,
-  unit: (state) => `${siPrefixes[state.range]}${units[state.measurement]}`,
 };
 
 const actions = {
