@@ -94,7 +94,7 @@ def update_settings(settings):
     print(settings)
     try:
         instr.resolution = settings['nrOfDigits']
-        instr.range = settings['range']
+        instr.range = round(settings['range'], 5)
         instr.auto_zero_enabled = settings['autozeroEnabled']
         emit('settings_updated', settings,
             broadcast=True, include_self=False)

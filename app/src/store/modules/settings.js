@@ -1,3 +1,34 @@
+const rangeLimits = {
+  ACI: {
+    min: 0.3,
+    max: 3,
+  },
+  ACV: {
+    min: 0.3,
+    max: 3,
+  },
+  DCI: {
+    min: 0.3,
+    max: 3,
+  },
+  DCV: {
+    min: 0.03,
+    max: 300,
+  },
+  R2W: {
+    min: 30,
+    max: 3e7,
+  },
+  R4W: {
+    min: 30,
+    max: 3e7,
+  },
+  Rext: {
+    min: 3e7,
+    max: 3e7,
+  },
+};
+
 const state = {
   measurement: "DCV",
   nrOfDigits: 4,
@@ -31,7 +62,11 @@ const mutations = {
     this._vm.$socket.client.emit("update_settings", state);
   },
   setRange(state, range) {
-    state.range = range;
+    const clipped_range = Math.max(
+      rangeLimits[state.measurement].min,
+      Math.min(range, rangeLimits[state.measurement].max)
+    );
+    state.range = clipped_range;
     this._vm.$socket.client.emit("update_settings", state);
   },
   setAutoZeroEnabled(state, autoZeroEnabled) {

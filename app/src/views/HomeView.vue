@@ -4,8 +4,11 @@
       <span>{{ voltage }}</span>
       <span v-if="this.voltage != 'Overload'"> {{ unit }}</span>
     </p>
-    <b-button @click="rangeUp">Range up</b-button>
-    <b-button @click="rangeDown">Range down</b-button>
+    <b-button @click="toggleAutoRange"
+      >Auto range: {{ range == "auto" ? "On" : "Off" }}</b-button
+    >
+    <b-button @click="setRange(actualRange * 10)">Range up</b-button>
+    <b-button @click="setRange(actualRange / 10)">Range down</b-button>
 
     <b-dropdown :text="'Digits: ' + nrOfDigits">
       <b-dropdown-item @click="setNrOfDigits(3)">3</b-dropdown-item>
@@ -88,6 +91,13 @@ export default {
       "setAutoZeroEnabled",
     ]),
     ...mapActions(["rangeUp", "rangeDown"]),
+    toggleAutoRange() {
+      if (this.range == "auto") {
+        this.setRange(this.actualRange);
+      } else {
+        this.setRange("auto");
+      }
+    },
   },
 };
 </script>
