@@ -1,24 +1,32 @@
-const units = {
-  ACI: "A",
-  ACV: "V",
-  DCI: "A",
-  DCV: "V",
-  R2W: "Ohm",
-  R4W: "Ohm",
-  Rext: "Ohm",
-};
-
-const siPrefixes = {
-  0.03: "m",
-  0.3: "m",
-  3: "",
-  30: "",
-  300: "",
-  3000: "k",
-  3e4: "k",
-  3e5: "k",
-  3e6: "M",
-  3e7: "M",
+const rangeLimits = {
+  ACI: {
+    min: 0.3,
+    max: 3,
+  },
+  ACV: {
+    min: 0.3,
+    max: 3,
+  },
+  DCI: {
+    min: 0.3,
+    max: 3,
+  },
+  DCV: {
+    min: 0.03,
+    max: 300,
+  },
+  R2W: {
+    min: 30,
+    max: 3e7,
+  },
+  R4W: {
+    min: 30,
+    max: 3e7,
+  },
+  Rext: {
+    min: 3e7,
+    max: 3e7,
+  },
 };
 
 const state = {
@@ -29,11 +37,10 @@ const state = {
 };
 
 const getters = {
-  measurment: (state) => state.measurment,
+  measurement: (state) => state.measurement,
   nrOfDigits: (state) => state.nrOfDigits,
   range: (state) => state.range,
   autoZeroEnabled: (state) => state.autoZeroEnabled,
-  unit: (state) => `${siPrefixes[state.range]}${units[state.measurement]}`,
 };
 
 const actions = {
@@ -55,7 +62,11 @@ const mutations = {
     this._vm.$socket.client.emit("update_settings", state);
   },
   setRange(state, range) {
-    state.range = range;
+    const clipped_range = Math.max(
+      rangeLimits[state.measurement].min,
+      Math.min(range, rangeLimits[state.measurement].max)
+    );
+    state.range = clipped_range;
     this._vm.$socket.client.emit("update_settings", state);
   },
   setAutoZeroEnabled(state, autoZeroEnabled) {
