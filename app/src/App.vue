@@ -78,4 +78,8 @@ button {
   font-family: "Digital-7 Mono";
   src: url("./fonts/digital-7-mono.ttf");
 }
+@font-face {
+  font-family: "Droid Sans Mono";
+  src: url("./fonts/droid-sans-mono.ttf");
+}
 </style>

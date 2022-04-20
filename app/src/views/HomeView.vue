@@ -63,8 +63,9 @@ export default {
 
 <style scoped>
 #measurement_display {
-  font-size: 100px;
-  font-family: "Digital-7 Mono";
+  font-size: 150px;
+  /* font-family: "Digital-7 Mono"; */
+  font-family: "Droid Sans Mono";
 }
 
 button {
