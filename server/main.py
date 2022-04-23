@@ -65,16 +65,16 @@ def on_connect(message):
         instr.resolution = 4
         instr.display_text_no_symbol = " " * 16
 
-    if not readout_thread_running:
-        readout_thread_running = True
-        readout_thread = socketio.start_background_task(send_readout_thread, instr)
-
     settings = {
         'measurement': instr.mode,
         'nrOfDigits': instr.resolution,
-        'range': instr.range,
+        'range': 'auto' if instr.auto_range_enabled else instr.range,
         'autozeroEnabled': instr.auto_zero_enabled,
     }
+
+    if not readout_thread_running:
+        readout_thread_running = True
+        readout_thread = socketio.start_background_task(send_readout_thread, instr)
 
     emit('settings_updated', settings)
 

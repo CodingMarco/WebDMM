@@ -32,7 +32,7 @@ const rangeLimits = {
 const state = {
   measurement: "DCV",
   nrOfDigits: 4,
-  range: 3,
+  range: "auto",
   autozeroEnabled: false,
 };
 
@@ -81,7 +81,11 @@ const mutations = {
   SOCKET_SETTINGS_UPDATED(state, settings) {
     state.measurement = settings.measurement;
     state.nrOfDigits = settings.nrOfDigits;
-    state.range = Number(settings.range.toFixed(6));
+    if (settings.range == "auto") {
+      state.range = "auto";
+    } else {
+      state.range = Number(settings.range.toFixed(6));
+    }
     state.autozeroEnabled = settings.autozeroEnabled;
   },
 };
