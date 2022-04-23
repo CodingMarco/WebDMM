@@ -81,7 +81,7 @@ const mutations = {
   SOCKET_SETTINGS_UPDATED(state, settings) {
     state.measurement = settings.measurement;
     state.nrOfDigits = settings.nrOfDigits;
-    state.range = settings.range;
+    state.range = Number(settings.range.toFixed(6));
     state.autozeroEnabled = settings.autozeroEnabled;
   },
 };

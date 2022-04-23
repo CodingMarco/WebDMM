@@ -58,7 +58,7 @@ def on_connect(message):
     if instr is None:
         keysight_visa = '/usr/lib/libktvisa32.so.0'
         visa_library = keysight_visa if os.path.isfile(keysight_visa) else '@py'
-        adapter = VISAAdapter(22, visa_library=visa_library)
+        adapter = VISAAdapter(23, visa_library=visa_library)
         instr = HP3478A(adapter)
         instr.auto_zero_enabled = False
         instr.range = 'auto'
@@ -69,7 +69,14 @@ def on_connect(message):
         readout_thread_running = True
         readout_thread = socketio.start_background_task(send_readout_thread, instr)
 
-    emit("re_connect", {"msg": "connected"})
+    settings = {
+        'measurement': instr.mode,
+        'nrOfDigits': instr.resolution,
+        'range': instr.range,
+        'autozeroEnabled': instr.auto_zero_enabled,
+    }
+
+    emit('settings_updated', settings)
 
 
 @socketio.on('disconnect')
