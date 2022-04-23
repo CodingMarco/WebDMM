@@ -11,17 +11,17 @@ export const ranges = {
   },
   3: {
     multiplier: 1,
-    siPrefix: "",
+    siPrefix: " ",
     digitsBeforeDecimal: 1,
   },
   30: {
     multiplier: 1,
-    siPrefix: "",
+    siPrefix: " ",
     digitsBeforeDecimal: 2,
   },
   300: {
     multiplier: 1,
-    siPrefix: "",
+    siPrefix: " ",
     digitsBeforeDecimal: 3,
   },
   3000: {

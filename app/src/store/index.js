@@ -2,6 +2,8 @@ import Vue from "vue";
 import Vuex from "vuex";
 import errorModal from "./modules/errorModal";
 import settings from "./modules/settings";
+import measurementResult from "./modules/measurementResult";
+import valueDisplay from "./modules/valueDisplay";
 
 Vue.use(Vuex);
 
@@ -11,5 +13,7 @@ export default new Vuex.Store({
   modules: {
     errorModal,
     settings,
+    measurementResult,
+    valueDisplay,
   },
 });

@@ -40,7 +40,7 @@ const getters = {
   measurement: (state) => state.measurement,
   nrOfDigits: (state) => state.nrOfDigits,
   range: (state) => state.range,
-  autoZeroEnabled: (state) => state.autoZeroEnabled,
+  autozeroEnabled: (state) => state.autozeroEnabled,
 };
 
 const actions = {
@@ -62,22 +62,27 @@ const mutations = {
     this._vm.$socket.client.emit("update_settings", state);
   },
   setRange(state, range) {
-    const clipped_range = Math.max(
-      rangeLimits[state.measurement].min,
-      Math.min(range, rangeLimits[state.measurement].max)
-    );
-    state.range = clipped_range;
+    if (range == "auto") {
+      state.range = range;
+    } else {
+      const clipped_range = Math.max(
+        rangeLimits[state.measurement].min,
+        Math.min(range, rangeLimits[state.measurement].max)
+      );
+      state.range = clipped_range;
+    }
+
     this._vm.$socket.client.emit("update_settings", state);
   },
-  setAutoZeroEnabled(state, autoZeroEnabled) {
-    state.autoZeroEnabled = autoZeroEnabled;
+  setAutozeroEnabled(state, autozeroEnabled) {
+    state.autozeroEnabled = autozeroEnabled;
     this._vm.$socket.client.emit("update_settings", state);
   },
   SOCKET_SETTINGS_UPDATED(state, settings) {
     state.measurement = settings.measurement;
     state.nrOfDigits = settings.nrOfDigits;
     state.range = settings.range;
-    state.autoZeroEnabled = settings.autoZeroEnabled;
+    state.autozeroEnabled = settings.autozeroEnabled;
   },
 };
 

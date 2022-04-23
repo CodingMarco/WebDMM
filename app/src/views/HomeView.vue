@@ -15,12 +15,15 @@
       <b-dropdown-item @click="setNrOfDigits(4)">4</b-dropdown-item>
       <b-dropdown-item @click="setNrOfDigits(5)">5</b-dropdown-item>
     </b-dropdown>
+
+    <b-button @click="setAutozeroEnabled(!autozeroEnabled)">
+      Auto zero: {{ autozeroEnabled ? "On" : "Off" }}
+    </b-button>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapMutations, mapActions } from "vuex";
-import formatMeasurement from "./formatMeasurement";
 
 const units = {
   ACI: "A",
@@ -35,9 +38,9 @@ const units = {
 const siPrefixes = {
   0.03: "m",
   0.3: "m",
-  3: "",
-  30: "",
-  300: "",
+  3: " ",
+  30: " ",
+  300: " ",
   3000: "k",
   3e4: "k",
   3e5: "k",
@@ -51,29 +54,35 @@ export default {
     return {
       voltage: (0.0).toFixed(this.nrOfDigits),
       connection: null,
-      actualRange: 3,
     };
   },
 
   computed: {
-    ...mapGetters(["measurement", "nrOfDigits", "range", "autozeroEnabled"]),
+    ...mapGetters([
+      "measurement",
+      "nrOfDigits",
+      "range",
+      "autozeroEnabled",
+      "valueDisplay",
+      "actualRange",
+      "rangeUsedForDisplay",
+    ]),
     unit() {
-      return `${siPrefixes[this.actualRange]}${units[this.measurement]}`;
+      return `${siPrefixes[this.rangeUsedForDisplay]}${
+        units[this.measurement]
+      }`;
     },
   },
 
   created: function () {
     console.log("Starting connection");
     this.$socket.$subscribe("readout", (data) => {
-      this.actualRange = data.range;
       if (data.value == "OVLD") {
         this.voltage = "Overload";
       } else {
-        this.voltage = formatMeasurement(
-          data.value,
-          this.actualRange,
-          this.nrOfDigits
-        );
+        this.setMeasurementResult(data);
+        this.updateValueDisplay();
+        this.voltage = `${this.valueDisplay.sign}${this.valueDisplay.beforeDecimal}.${this.valueDisplay.afterDecimal}`;
       }
     });
     console.log("Subscribed to readout");
@@ -85,12 +94,13 @@ export default {
 
   methods: {
     ...mapMutations([
+      "setMeasurementResult",
       "setMeasurement",
       "setNrOfDigits",
       "setRange",
-      "setAutoZeroEnabled",
+      "setAutozeroEnabled",
     ]),
-    ...mapActions(["rangeUp", "rangeDown"]),
+    ...mapActions(["rangeUp", "rangeDown", "updateValueDisplay"]),
     toggleAutoRange() {
       if (this.range == "auto") {
         this.setRange(this.actualRange);
@@ -105,10 +115,12 @@ export default {
 <style scoped>
 #measurement_display {
   font-size: 100px;
-  font-family: "Digital-7 Mono";
+  /* font-family: "Digital-7 Mono"; */
+  font-family: "Droid Sans Mono";
 }
 
-button {
+button,
+.dropdown {
   margin-right: 10px;
 }
 </style>

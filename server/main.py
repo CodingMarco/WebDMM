@@ -94,7 +94,7 @@ def update_settings(settings):
     print(settings)
     try:
         instr.resolution = settings['nrOfDigits']
-        instr.range = round(settings['range'], 5)
+        instr.range = 'auto' if settings['range'] == 'auto' else round(settings['range'], 5)
         instr.auto_zero_enabled = settings['autozeroEnabled']
         emit('settings_updated', settings,
             broadcast=True, include_self=False)
@@ -109,7 +109,7 @@ def send_readout_thread(instr: HP3478A):
         socketio.sleep()
         raw_read = instr.read().strip()
         if re.match(r'\+9\.[09]{5}E\+9', raw_read):
-            readout = "OVLD"
+            readout = 'OVLD'
             range = instr.range
         else:
             readout = float(raw_read)
@@ -121,4 +121,4 @@ def send_readout_thread(instr: HP3478A):
 
 
 if __name__ == '__main__':
-    socketio.run(app, host="0.0.0.0", port=5005, debug=True)
+    socketio.run(app, host='0.0.0.0', port=5005, debug=True)
