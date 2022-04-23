@@ -4,6 +4,17 @@
       <span>{{ voltage }}</span>
       <span v-if="this.voltage != 'Overload'"> {{ unit }}</span>
     </p>
+
+    <b-dropdown :text="'Mode: ' + modes[mode]">
+      <b-dropdown-item
+        v-for="(mode, index) in modes"
+        @click="setMode(index)"
+        :key="index"
+        :value="index"
+        >{{ mode }}
+      </b-dropdown-item>
+    </b-dropdown>
+
     <b-button @click="toggleAutoRange"
       >Auto range: {{ range == "auto" ? "On" : "Off" }}</b-button
     >
@@ -24,6 +35,16 @@
 
 <script>
 import { mapGetters, mapMutations, mapActions } from "vuex";
+
+const modes = {
+  DCV: "⎓ V",
+  ACV: "~ V",
+  R2W: "2 Wire Ω",
+  R4W: "4 Wire Ω",
+  DCI: "⎓ A",
+  ACI: "~ A",
+  Rext: "Extended Ω",
+};
 
 const units = {
   ACI: "A",
@@ -54,12 +75,13 @@ export default {
     return {
       voltage: (0.0).toFixed(this.nrOfDigits),
       connection: null,
+      modes: modes,
     };
   },
 
   computed: {
     ...mapGetters([
-      "measurement",
+      "mode",
       "nrOfDigits",
       "range",
       "autozeroEnabled",
@@ -68,9 +90,7 @@ export default {
       "rangeUsedForDisplay",
     ]),
     unit() {
-      return `${siPrefixes[this.rangeUsedForDisplay]}${
-        units[this.measurement]
-      }`;
+      return `${siPrefixes[this.rangeUsedForDisplay]}${units[this.mode]}`;
     },
   },
 
@@ -95,7 +115,7 @@ export default {
   methods: {
     ...mapMutations([
       "setMeasurementResult",
-      "setMeasurement",
+      "setMode",
       "setNrOfDigits",
       "setRange",
       "setAutozeroEnabled",

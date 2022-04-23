@@ -63,10 +63,10 @@ def on_connect(message):
         instr.auto_zero_enabled = False
         instr.range = 'auto'
         instr.resolution = 4
-        instr.display_text_no_symbol = " " * 16
+        #instr.display_text_no_symbol = " " * 16
 
     settings = {
-        'measurement': instr.mode,
+        'mode': instr.mode,
         'nrOfDigits': instr.resolution,
         'range': 'auto' if instr.auto_range_enabled else instr.range,
         'autozeroEnabled': instr.auto_zero_enabled,
@@ -100,6 +100,7 @@ def update_settings(settings):
     global instr
     print(settings)
     try:
+        instr.mode = settings['mode']
         instr.resolution = settings['nrOfDigits']
         instr.range = 'auto' if settings['range'] == 'auto' else round(settings['range'], 5)
         instr.auto_zero_enabled = settings['autozeroEnabled']
