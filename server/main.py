@@ -63,7 +63,7 @@ def on_connect(message):
         instr.auto_zero_enabled = False
         instr.range = 'auto'
         instr.resolution = 4
-        #instr.display_text_no_symbol = " " * 16
+        instr.display_text_no_symbol = " " * 16
 
     settings = {
         'mode': instr.mode,

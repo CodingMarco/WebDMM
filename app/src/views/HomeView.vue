@@ -142,5 +142,7 @@ export default {
 button,
 .dropdown {
   margin-right: 10px;
+  /* position: fixed;
+  bottom: 0; */
 }
 </style>
